@@ -3,6 +3,19 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ============================
      ELEMENT CACHE + USER NAME
      ============================ */
+     // --- Auto Greeting on First Load ---
+  window.addEventListener("load", () => {
+    const chatWindow = document.getElementById("chatWindow");
+    if (chatWindow && !sessionStorage.getItem("welcomed")) {
+      const bubble = document.createElement("div");
+      bubble.className = "bot-msg";
+      bubble.innerHTML = `
+        <p>👋 Hi there! I'm <b>ManoMitra</b>, your mental wellness companion.<br>
+        How are you feeling today?</p>`;
+      chatWindow.appendChild(bubble);
+      sessionStorage.setItem("welcomed", true);
+    }
+  });
   const chatWindow = document.getElementById("chatWindow");
   const intro = document.getElementById("intro");
   const sendBtn = document.getElementById("sendBtn");

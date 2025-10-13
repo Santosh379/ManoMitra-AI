@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ManoMitra AI — Your Mind’s Safe Space</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <script defer src="/static/script.js"></script>
+</head>
+<body class="theme-mint" data-theme="mint">
+
+  <!-- ===== INTRO (animated glowing logo) ===== -->
+  <div id="intro" class="intro">
+    <div class="intro-inner">
+      <div class="logo-wrap">
+        <div class="glow-logo"></div>
+        <h2 class="logo-text">ManoMitra</h2>
+      </div>
+
+      <div class="intro-text">
+        <h1 class="intro-title">Welcome to ManoMitra</h1>
+        <p class="intro-sub">A gentle space to check-in with yourself. Take a breath, you’re safe here.</p>
+        <button id="enterBtn" class="btn intro-btn">Begin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOP NAV (embossed / neumorphic) ===== -->
+  <header class="topbar">
+    <div class="brand">
+      <svg class="mini-logo-svg" width="46" height="46" viewBox="0 0 120 120" aria-label="ManoMitra logo">
+        <defs>
+          <linearGradient id="logoGradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#00caa0">
+              <animate attributeName="stop-color" values="#00caa0;#42a5f5;#00caa0" dur="6s" repeatCount="indefinite" />
+            </stop>
+            <stop offset="100%" stop-color="#42a5f5">
+              <animate attributeName="stop-color" values="#42a5f5;#00caa0;#42a5f5" dur="6s" repeatCount="indefinite" />
+            </stop>
+          </linearGradient>
+        </defs>
+        <circle cx="60" cy="60" r="52" fill="url(#logoGradient)" opacity="0.3">
+          <animate attributeName="r" values="50;54;50" dur="2.4s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="60" cy="60" r="32" fill="url(#logoGradient)" opacity="0.8"/>
+      </svg>
+      <div class="title">ManoMitra AI</div>
+    </div>
+
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+      <button class="nav-btn active" data-target="chat">Chat</button>
+      <button class="nav-btn" data-target="mood">Mood Tracker</button>
+      <button class="nav-btn" data-target="journal">Daily Journal</button>
+      <button class="nav-btn" data-target="relax">Relaxation Tools</button>
+    </nav>
+
+    <div class="controls">
+      <span class="dark-label">Dark Mode</span>
+      <label class="theme-toggle" title="Toggle dark mode">
+        <input id="themeToggle" type="checkbox" aria-label="Toggle dark mode" />
+        <span class="switch"><span class="knob"></span></span>
+      </label>
+    </div>
+  </header>
+
+  <!-- ===== MAIN: Chat (default active tab) ===== -->
+  <main class="container">
+    <aside id="dashboard" class="left-card">
+      <h2>Welcome</h2>
+      <p class="big">Your thoughts matter. I'm here to listen.</p>
+
+      <div class="card small">
+        <button id="openMood" class="pill">Open Mood Tracker</button>
+      </div>
+
+      <div class="card gentle" id="summaryCard">
+        <h3>Gentle Achievements</h3>
+        <p id="achieveText">Small steps count. You're doing great. 🌸</p>
+      </div>
+    </aside>
+
+    <section id="chat" class="tab-pane active chat-section">
+      <div class="chat-card card">
+        <div class="chat-header">
+          <h3>Chat with ManoMitra</h3>
+          <div class="mood-bar">
+            <button id="resetChat" class="reset-btn">♻️ Reset</button>
+            <div id="moodIndicator">Neutral</div>
+          </div>
+        </div>
+        <div id="chatWindow" class="chat-window" aria-live="polite"></div>
+
+        <div class="chat-input">
+          <input id="userInput" placeholder="Type your message..." aria-label="Message input"/>
+          <button id="sendBtn" class="send">Send</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== MOOD TRACKER PAGE ===== -->
+  <section id="mood" class="tab-pane panel-wrap">
+    <div class="panel card">
+      <h3>Mood Over Time</h3>
+      <canvas id="moodChart" height="120"></canvas>
+      <button id="exportCsv" class="pill">Export CSV</button>
+    </div>
+
+    <div class="panel card">
+      <h3>Mood Distribution</h3>
+      <div id="donut" class="donut">—</div>
+    </div>
+  </section>
+
+  <!-- ===== DAILY JOURNAL PAGE ===== -->
+  <section id="journal" class="tab-pane panel-wrap">
+    <div class="panel card">
+      <h3>Daily Journal</h3>
+      <textarea id="journalText" placeholder="How was your day today?"></textarea>
+      <div class="journal-actions">
+        <button id="saveJournal" class="pill">Save Entry</button>
+        <button id="dailySummary" class="pill">AI Daily Summary</button>
+        <button id="weeklySummary" class="pill">AI Weekly Summary</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RELAXATION PAGE ===== -->
+  <section id="relax" class="tab-pane panel-wrap">
+    <div class="panel card relax-grid">
+      <div class="breathing-block">
+        <div id="breathingCircle" class="breathing" aria-hidden="true"></div>
+        <div class="center small">Follow the circle — 1 min</div>
+        <div class="breath-controls">
+          <button id="startBreath" class="pill">Start</button>
+          <button id="stopBreath" class="pill">Stop</button>
+        </div>
+      </div>
+
+      <div class="sound-block">
+        <h4>Sound Therapy</h4>
+        <div id="soundButtons" class="sound-buttons"></div>
+        <div id="relaxOutput" class="small muted"></div>
+      </div>
+
+      <div class="affirm card small">
+        <h4>Affirmation</h4>
+        <div id="affirmText">You are enough.</div>
+        <button id="newAffirm" class="pill">New affirmation</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ambient floating orbs background -->
+  <div id="ambientContainer"></div>
+
+  <!-- 🧘 Breathing Modal -->
+  <div id="breathModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Deep Breathing</h3>
+      <div id="breathCircle" class="breathing-circle"></div>
+      <p id="breathText">Get ready...</p>
+      <button id="closeBreath" class="pill">Close</button>
+    </div>
+  </div>
+
+</body>
+</html>

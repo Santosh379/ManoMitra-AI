@@ -440,7 +440,16 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     } catch (err) { console.error("Mood chart error:", err); }
   }
-  initMoodChart();
+  const refreshMoodBtn = document.getElementById("refreshMood");
+  if (refreshMoodBtn) {
+    refreshMoodBtn.addEventListener("click", () => {
+      console.log("🔁 Refreshing mood chart...");
+      initMoodChart();
+    });
+  }
+
+  // keep this too
+  document.addEventListener("DOMContentLoaded", initMoodChart);
 
   /* ============================
      SHOW SUMMARIES

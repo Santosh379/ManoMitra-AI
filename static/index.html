@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ManoMitra AI — Your Mind’s Safe Space</title>
   <link rel="stylesheet" href="/static/style.css" />
-  <script defer src="/static/script.js"></script>
 </head>
 <body class="theme-mint" data-theme="mint">
 
@@ -163,6 +162,13 @@
       <button id="closeBreath" class="pill">Close</button>
     </div>
   </div>
+<!-- Chart.js must load before ManoMitra's script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Main app script -->
+<script src="/static/script.js"></script>
+</body>
+</html>
 
 </body>
 </html>

@@ -155,7 +155,7 @@ def api_relaxation():
     tools = [
         {"id": "ocean", "title": "Ocean Waves", "type": "audio", "file": "/static/audio/ocean.mp3"},
         {"id": "forest", "title": "Forest Birds", "type": "audio", "file": "/static/audio/forest.mp3"},
-        {"id": "rain", "title": "Rain Ambience", "type": "audio", "file": "/static/audio/rain.mp3"},
+        {"id": "piano", "title": "Piano Ambience", "type": "audio", "file": "/static/audio/piano.mp3"},
         {"id": "breath", "title": "Deep Breathing", "type": "guided", "text": "Inhale 4s, hold 2s, exhale 6s — repeat slowly."},
         {"id": "ground", "title": "5-4-3-2-1 Grounding", "type": "guided", "text": "5 things you see, 4 touch, 3 hear, 2 smell, 1 taste."},
         {"id": "affirm", "title": "Affirmation", "type": "text", "text": "You are doing your best, and that’s enough 💙"}

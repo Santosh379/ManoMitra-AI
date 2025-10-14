@@ -318,44 +318,6 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       bonus.appendChild(bbtn);
       grid.appendChild(bonus);
-
-      /* ==============
-         RAIN AMBIENCE
-         Added: creates a card inside the same relax-grid
-         Uses static path: /static/audio/rain.mp3 (as requested)
-         ============== */
-      const rainCard = document.createElement("div");
-      rainCard.className = "tool-card";
-      rainCard.innerHTML = `<h4>🌧️ Rain Ambience</h4><p>Relax with soft rainfall sounds</p>`;
-      const rainBtn = document.createElement("button");
-      rainBtn.className = "pill";
-      rainBtn.textContent = "Play";
-      // Use the static path as you specified
-      let rainAudio = new Audio("/static/audio/rain.mp3");
-      rainAudio.loop = true;
-      rainAudio.volume = 0.5;
-      rainBtn.addEventListener("click", () => {
-        if (rainAudio.paused) {
-          // stop any previously playing tool audios to avoid overlap
-          if (audioEl && !audioEl.paused) {
-            audioEl.pause();
-            currentBtn && (currentBtn.textContent = "Play");
-            currentBtn = null;
-          }
-          rainAudio.play().catch(err => console.log("Autoplay blocked:", err));
-          rainBtn.textContent = "Stop";
-          relaxOutput.innerText = "🌧️ Playing rain ambience...";
-        } else {
-          rainAudio.pause();
-          rainBtn.textContent = "Play";
-          relaxOutput.innerText = "⛅ Rain ambience stopped.";
-        }
-        relaxOutput.classList.add("active");
-        setTimeout(() => relaxOutput.classList.remove("active"), 1200);
-      });
-      rainCard.appendChild(rainBtn);
-      grid.appendChild(rainCard);
-
     } catch (err) {
       console.error("Relaxation tools load error:", err);
     }

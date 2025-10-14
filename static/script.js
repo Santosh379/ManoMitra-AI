@@ -319,6 +319,43 @@ document.addEventListener("DOMContentLoaded", () => {
       bonus.appendChild(bbtn);
       grid.appendChild(bonus);
 
+      /* ==============
+         RAIN AMBIENCE
+         Added: creates a card inside the same relax-grid
+         Uses static path: /static/audio/rain.mp3 (as requested)
+         ============== */
+      const rainCard = document.createElement("div");
+      rainCard.className = "tool-card";
+      rainCard.innerHTML = `<h4>🌧️ Rain Ambience</h4><p>Relax with soft rainfall sounds</p>`;
+      const rainBtn = document.createElement("button");
+      rainBtn.className = "pill";
+      rainBtn.textContent = "Play";
+      // Use the static path as you specified
+      let rainAudio = new Audio("/static/audio/rain.mp3");
+      rainAudio.loop = true;
+      rainAudio.volume = 0.5;
+      rainBtn.addEventListener("click", () => {
+        if (rainAudio.paused) {
+          // stop any previously playing tool audios to avoid overlap
+          if (audioEl && !audioEl.paused) {
+            audioEl.pause();
+            currentBtn && (currentBtn.textContent = "Play");
+            currentBtn = null;
+          }
+          rainAudio.play().catch(err => console.log("Autoplay blocked:", err));
+          rainBtn.textContent = "Stop";
+          relaxOutput.innerText = "🌧️ Playing rain ambience...";
+        } else {
+          rainAudio.pause();
+          rainBtn.textContent = "Play";
+          relaxOutput.innerText = "⛅ Rain ambience stopped.";
+        }
+        relaxOutput.classList.add("active");
+        setTimeout(() => relaxOutput.classList.remove("active"), 1200);
+      });
+      rainCard.appendChild(rainBtn);
+      grid.appendChild(rainCard);
+
     } catch (err) {
       console.error("Relaxation tools load error:", err);
     }
@@ -395,12 +432,29 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch("/api/moods");
       if (!res.ok) throw new Error("Fetch fail");
       const moods = await res.json();
+
+      // If no mood data, clear canvas and warn (prevents blank chart)
+      if (!Array.isArray(moods) || moods.length === 0) {
+        const ctxEmpty = canvas.getContext("2d");
+        ctxEmpty.clearRect(0, 0, canvas.width, canvas.height);
+        console.warn("No mood data to plot");
+        return;
+      }
+
       const labels = moods.map(m => m.date);
       const scores = moods.map(m => m.score);
       const colors = moods.map(m => m.mood === "happy" ? "#ffb74d" :
         m.mood === "sad" ? "#42a5f5" :
         m.mood === "anxious" ? "#b388ff" : "#80cbc4");
-      new Chart(canvas, {
+
+      // destroy existing chart if any to avoid overlapping/drawing issues
+      if (window.moodChart) {
+        try { window.moodChart.destroy(); } catch (e) { console.warn("destroy chart error", e); }
+        window.moodChart = null;
+      }
+
+      const ctx = canvas.getContext("2d");
+      window.moodChart = new Chart(ctx, {
         type: "line",
         data: {
           labels,
@@ -411,14 +465,15 @@ document.addEventListener("DOMContentLoaded", () => {
             backgroundColor: colors,
             tension: 0.3,
             fill: true,
-          }]
+          }],
         },
         options: {
           scales: {
             y: { beginAtZero: true, suggestedMin: -1, suggestedMax: 1 },
             x: { ticks: { maxRotation: 0 } }
           },
-          plugins: { legend: { display: false } }
+          plugins: { legend: { display: false } },
+          maintainAspectRatio: false,
         }
       });
     } catch (err) { console.error("Mood chart error:", err); }
@@ -431,17 +486,37 @@ document.addEventListener("DOMContentLoaded", () => {
   async function showSummaries() {
     try {
       document.querySelectorAll(".ai-summary-card").forEach(e => e.remove());
-      const [dailyRes, weeklyRes] = await Promise.all([
+
+      // show an immediate small bot message so user knows something is happening
+      const loadingMsg = appendMessage("🧠 Generating AI summary — hang tight, pulling results...", "bot");
+
+      // fetch daily and weekly in parallel to speed things up
+      const [dailyRes, weeklyRes] = await Promise.allSettled([
         fetch("/api/summary/daily_ai"),
         fetch("/api/summary/weekly")
       ]);
-      const dailyData = await dailyRes.json();
-      const weeklyData = await weeklyRes.json();
+
+      let dailyData = {};
+      let weeklyData = [];
+
+      if (dailyRes.status === "fulfilled" && dailyRes.value.ok) {
+        try { dailyData = await dailyRes.value.json(); } catch (e) { console.error("daily parse err", e); }
+      } else {
+        console.warn("Daily summary fetch failed", dailyRes);
+      }
+
+      if (weeklyRes.status === "fulfilled" && weeklyRes.value.ok) {
+        try { weeklyData = await weeklyRes.value.json(); } catch (e) { console.error("weekly parse err", e); }
+      } else {
+        console.warn("Weekly summary fetch failed", weeklyRes);
+      }
+
+      loadingMsg.remove();
 
       const summaryBox = document.createElement("div");
       summaryBox.className = "ai-summary-card";
 
-      const weeklySummary = weeklyData.length
+      const weeklySummary = Array.isArray(weeklyData) && weeklyData.length
         ? weeklyData.map(w => `<li>Week ${w.week}: ${w.mood} (${w.avg_score})</li>`).join("")
         : "<li>No weekly data yet.</li>";
 
@@ -633,7 +708,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 })();
 
-// 🌈 Welcome screen fade-out
+/* ============================
+   Welcome screen fade-out
+   ============================ */
 window.addEventListener("load", () => {
   setTimeout(() => {
     const welcome = document.querySelector(".welcome-logo-container");

@@ -55,16 +55,20 @@ def get_last_messages(limit=8):
     return [{"role": r[0], "content": r[1]} for r in reversed(rows)]
 
 def get_all_moods():
-    """Return average polarity per mood per day (for chart)."""
+    """Return daily average mood polarity for chart display."""
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute("""
-        SELECT date(timestamp), mood, AVG(polarity)
+        SELECT 
+            substr(timestamp, 1, 10) AS date,
+            mood,
+            ROUND(AVG(COALESCE(polarity, 0)), 3) AS avg_polarity
         FROM chat_history
         WHERE role = 'user' AND mood IS NOT NULL
-        GROUP BY date(timestamp), mood
-        ORDER BY timestamp
+        GROUP BY date, mood
+        ORDER BY date ASC
     """)
     rows = c.fetchall()
     conn.close()
     return [{"date": r[0], "mood": r[1], "score": r[2]} for r in rows]
+

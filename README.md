@@ -8,7 +8,7 @@
 
 ManoMitra is an AI-powered mental wellness companion that provides empathetic emotional support, journaling, and relaxation tools through natural conversation.
 
-It is built using Flask, Google Gemini API, and an emotion-based frontend design. The app helps users manage stress, express emotions safely, and build mindful habits through AI-guided interaction.
+Built using Flask, the Google Gemini API, and an emotion-driven frontend, this app helps users manage stress, express emotions safely, and build mindful habits through AI-guided interactions. It leverages Gemini’s sentiment analysis to visualize emotional trends, generate mood-based graphs, and adapt the interface dynamically to the user’s emotions.
 
 ---
 

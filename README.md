@@ -69,7 +69,7 @@ User → Frontend (HTML, CSS, JS)
 → Flask Backend (Python)  
 → Gemini API (AI Response)  
 → TextBlob (Emotion Analysis)  
-→ SQLite (Journal and Mood Storage)
+→ SQLite (Journal database and Emotion Log)
 
 ---
 
@@ -80,6 +80,10 @@ User → Frontend (HTML, CSS, JS)
 - 📶 Enable offline functionality for rural areas.  
 - 📊 Add advanced emotional analytics.  
 - 🧠 Connect users to real mental health professionals.
+- 🔄 Introducing a self genAI into it.
+- 📔 Smart journal Suggestion based on your chat with ManoMitra.
+- 🎧 Additional relaxation toolkit Expansion - benefiting the emotion.
+- 🧩 Mini games - creation of emotional games for a person's well being.
 
 ---
 

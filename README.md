@@ -49,7 +49,7 @@ Built using Flask, the Google Gemini API, and an emotion-driven frontend, this a
    ```
    python app.py
    ```
-6️⃣ Open the app in your browser at http://127.0.0.1:8000  
+6️⃣ Open the app in your browser at https://manomitra-ai.onrender.com 
 
 ---
 
